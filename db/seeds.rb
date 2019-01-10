@@ -7,7 +7,7 @@
 #   Character.create(name: 'Luke', movie: movies.first)
 
 Product.delete_all
-Product.create! id: 1, title: "Iron Helmet", price: 50.00, inventory_count: 25
+Product.create! id: 1, title: "Iron Helmet", price: 79.99, inventory_count: 25
 Product.create! id: 2, title: "Hylian Shield", price: 1333.37, inventory_count: 1
-Product.create! id: 3, title: "Leather Boots", price: 45.50, inventory_count: 10
-Product.create! id: 4, title: "Mythical Chainmail", price: 34.00, inventory_count: 0
+Product.create! id: 3, title: "Leather Boots", price: 16.99, inventory_count: 10
+Product.create! id: 4, title: "Mythical Chainmail", price: 99.99, inventory_count: 0

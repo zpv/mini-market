@@ -1,13 +1,24 @@
 module Types
   class QueryType < Types::BaseObject
-    # Add root-level fields here.
-    # They will be entry points for queries on your schema.
+    field :products, [ProductType], null: true do
+      description 'Display a list of products'
+      argument :only_available, Boolean, required: false, default_value: false
+    end
 
-    # TODO: remove me
-    field :test_field, String, null: false,
-      description: "An example field added by the generator"
-    def test_field
-      "Hello World!"
+    def products(only_available:)
+      if only_available
+        Product.where("inventory_count > 0")
+      else
+        Product.all
+      end
+    end
+
+    field :product, ProductType, null: false do
+      argument :id, Int, required: false
+    end
+
+    def product(id:)
+      Product.find(id)
     end
   end
 end

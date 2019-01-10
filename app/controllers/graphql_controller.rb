@@ -6,6 +6,8 @@ class GraphqlController < ApplicationController
     context = {
       # Query context goes here, for example:
       # current_user: current_user,
+      session: session,
+      current_cart: current_cart
     }
     result = MiniMarketSchema.execute(query, variables: variables, context: context, operation_name: operation_name)
     render json: result
@@ -15,6 +17,15 @@ class GraphqlController < ApplicationController
   end
 
   private
+
+  # may end up with stale carts w/ tons of unique users – clean up job could be created
+  def current_cart
+    Cart.find(session[:cart_id])
+  rescue ActiveRecord::RecordNotFound
+    cart = Cart.create!
+    session[:cart_id] = cart.id
+    cart
+  end
 
   # Handle form data, JSON body, or a blank value
   def ensure_hash(ambiguous_param)
