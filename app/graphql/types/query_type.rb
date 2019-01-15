@@ -20,5 +20,13 @@ module Types
     def product(id:)
       Product.find(id)
     end
+
+    field :cart, CartType, null: false do
+      description 'View your current session\'s cart'
+    end
+
+    def cart
+      context[:current_cart]
+    end
   end
 end

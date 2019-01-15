@@ -1,11 +1,11 @@
-class Cart < ApplicationRecord
+class Receipt < ApplicationRecord
   belongs_to :user, optional: true
-  has_many :cart_items, dependent: :destroy
+  has_many :receipt_items, dependent: :destroy
 
   before_save :update_subtotal
 
   def subtotal
-    cart_items.collect { |ci| ci.valid? ? ci.total_price : 0 }.sum
+    receipt_items.collect { |ri| ri.valid? ? ri.total_price : 0 }.sum
   end
 
 private

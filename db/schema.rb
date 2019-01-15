@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_01_10_054945) do
+ActiveRecord::Schema.define(version: 2019_01_14_233835) do
 
   create_table "cart_items", force: :cascade do |t|
     t.integer "product_id"
@@ -38,6 +38,26 @@ ActiveRecord::Schema.define(version: 2019_01_10_054945) do
     t.integer "inventory_count"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "receipt_items", force: :cascade do |t|
+    t.integer "product_id"
+    t.integer "receipt_id"
+    t.integer "quantity"
+    t.decimal "price", precision: 12, scale: 3
+    t.decimal "total_price", precision: 12, scale: 3
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["product_id"], name: "index_receipt_items_on_product_id"
+    t.index ["receipt_id"], name: "index_receipt_items_on_receipt_id"
+  end
+
+  create_table "receipts", force: :cascade do |t|
+    t.decimal "subtotal", precision: 12, scale: 3
+    t.integer "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_receipts_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|

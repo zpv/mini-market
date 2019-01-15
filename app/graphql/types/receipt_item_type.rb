@@ -1,5 +1,5 @@
 module Types
-  class CartItemType < Types::BaseObject
+  class ReceiptItemType < Types::BaseObject
     field :quantity, Integer, null: false
     field :price, Float, null: false
     field :total_price, Float, null: false

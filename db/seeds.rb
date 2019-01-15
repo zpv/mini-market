@@ -6,6 +6,12 @@
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 
+CartItem.delete_all
+Cart.delete_all
+
+ReceiptItem.delete_all
+Receipt.delete_all
+
 Product.delete_all
 Product.create! id: 1, title: "Iron Helmet", price: 79.99, inventory_count: 25
 Product.create! id: 2, title: "Hylian Shield", price: 1333.37, inventory_count: 1
