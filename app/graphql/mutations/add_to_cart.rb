@@ -38,10 +38,9 @@ class Mutations::AddToCart < Mutations::BaseMutation
     end
 
     cart.save
-    context[:session][:cart_id] = cart.id
 
     return {
-      cart: cart,
+      cart: cart.reload,
       user_errors: []
     }
   end
