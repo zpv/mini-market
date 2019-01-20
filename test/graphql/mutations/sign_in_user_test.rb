@@ -13,10 +13,8 @@ class Mutations::SignInUserTest < ActiveSupport::TestCase
 
   test 'creates a token' do
     result = perform(
-      auth_provider: {
-        email: @user.email,
-        password: @user.password
-      }
+      email: @user.email,
+      password: @user.password
     )
 
     assert result.present?
@@ -24,17 +22,17 @@ class Mutations::SignInUserTest < ActiveSupport::TestCase
     assert_equal result.user, @user
   end
 
-  # Should fail to create record with empty email/password
-  test 'wrong email' do
-    assert_nil perform(auth_provider: {
-                         email: 'wrong'
-                       })
+  test 'bad email' do
+    assert_nil perform(
+      email: 'wrong',
+      password: @user.password
+    )
   end
 
-  test 'wrong password' do
-    assert_nil perform(auth_provider: {
-                         email: @user.email,
-                         password: 'wrong'
-                       })
+  test 'bad password' do
+    assert_nil perform(
+      email: @user.email,
+      password: 'wrong'
+    )
   end
 end

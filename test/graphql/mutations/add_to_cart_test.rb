@@ -2,7 +2,7 @@ require 'test_helper'
 
 class Mutations::AddToCartTest < ActiveSupport::TestCase
   def perform(args)
-    Mutations::AddToCart.new(object: nil, context: { current_cart: @cart }).resolve(
+    Mutations::AddToCart.new(object: nil, context: { current_cart: @cart, session: { cart_id: @cart.id } }).resolve(
       **args
     )
   end

@@ -7,5 +7,5 @@ class User < ApplicationRecord
   validates :email, presence: true, uniqueness: true,
                     format: { with: URI::MailTo::EMAIL_REGEXP, message: 'requires a valid email address' }
 
-  has_one :cart
+  has_many :receipt
 end

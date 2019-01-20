@@ -17,6 +17,7 @@ module Mutations
       add_to_cart(product, quantity)
 
       @cart.save
+      context[:session][:cart_id] = @cart.id
 
       {
         cart: @cart.reload,

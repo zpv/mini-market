@@ -1,5 +1,5 @@
 module Mutations
-  class CheckoutCart < Mutations::BaseMutation
+  class CheckoutCart < AuthenticatedMutation
     field :receipt, Types::ReceiptType, null: true
     field :user_errors, [Types::UserError], null: false
 
@@ -7,7 +7,7 @@ module Mutations
       @cart = context[:current_cart]
 
       errors = validate_and_update_cart
-      return { receipt: nil, user_errors: errors } if user_errors.any?
+      return { receipt: nil, user_errors: errors } if errors.any?
 
       receipt = perform_checkout
       @cart.destroy!
@@ -26,7 +26,7 @@ module Mutations
     end
 
     def generate_receipt
-      receipt = Receipt.new
+      receipt = Receipt.new user: context[:current_user]
       receipt.receipt_items.new(@cart.cart_items.map do |ci|
         {
           quantity: ci.quantity,

@@ -1,5 +1,7 @@
 module Types
   class ProductType < Types::BaseObject
+    description 'An item that is purchasable by a user'
+
     field :id, ID, null: false
 
     field :title, String, null: false

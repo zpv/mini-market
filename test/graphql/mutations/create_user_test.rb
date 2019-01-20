@@ -10,10 +10,8 @@ class Mutations::CreateUserTest < ActiveSupport::TestCase
   test 'success' do
     user = perform(
       name: 'Test User',
-      auth_provider: {
-        email: 'email@example.com',
-        password: 'hello'
-      }
+      email: 'email@example.com',
+      password: 'hello'
     )
 
     assert user.persisted?
@@ -25,10 +23,8 @@ class Mutations::CreateUserTest < ActiveSupport::TestCase
   test 'failure' do
     assert_raises ActiveRecord::RecordInvalid do
       perform(name: '',
-              auth_provider: {
-                email: '',
-                password: ''
-              })
+              email: '',
+              password: '')
     end
   end
 end
