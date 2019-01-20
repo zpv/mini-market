@@ -8,7 +8,11 @@ class Cart < ApplicationRecord
     cart_items.collect { |ci| ci.valid? ? ci.total_price : 0 }.sum
   end
 
-private
+  def find_item(product_id:)
+    cart_items.find_by product_id: product_id
+  end
+
+  private
 
   def update_subtotal
     self[:subtotal] = subtotal

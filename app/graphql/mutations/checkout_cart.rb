@@ -1,74 +1,76 @@
-class Mutations::CheckoutCart < Mutations::BaseMutation
-  field :receipt, Types::ReceiptType, null: true
-  field :user_errors, [Types::UserError], null: false
+module Mutations
+  class CheckoutCart < Mutations::BaseMutation
+    field :receipt, Types::ReceiptType, null: true
+    field :user_errors, [Types::UserError], null: false
 
-  def resolve()
-    cart = context[:current_cart]
-    user_errors = validate_and_update_cart(cart)
+    def resolve
+      @cart = context[:current_cart]
 
-    if user_errors.count > 0
-      return {
-        receipt: nil,
-        user_errors: user_errors
-      }
+      errors = validate_and_update_cart
+      return { receipt: nil, user_errors: errors } if user_errors.any?
+
+      receipt = perform_checkout
+      @cart.destroy!
+
+      { receipt: receipt, user_errors: [] }
     end
 
-    # perform checkout
-    cart.cart_items.all.each do |ci|
-      ci.product.decrement!(:inventory_count, ci.quantity)
+    private
+
+    def perform_checkout
+      @cart.cart_items.all.each do |ci|
+        ci.product.decrement!(:inventory_count, ci.quantity)
+      end
+
+      generate_receipt
     end
 
-    receipt = generate_receipt(cart)
-    receipt.save!
+    def generate_receipt
+      receipt = Receipt.new
+      receipt.receipt_items.new(@cart.cart_items.map do |ci|
+        {
+          quantity: ci.quantity,
+          price: ci.price,
+          product: ci.product
+        }
+      end)
+      receipt.save!
+      receipt
+    end
 
-    cart.destroy!
+    # Validate product stock availability
+    def validate_and_update_cart
+      errors = []
 
-    {
-      receipt: receipt,
-      user_errors: []
-    }
-  end
+      @cart.cart_items.all.each do |ci|
+        next unless ci.quantity > ci.product.inventory_count
 
-  private
-
-  def generate_receipt (cart)
-    receipt = Receipt.new
-    receipt.receipt_items.new(cart.cart_items.map{ | ci |
-      {
-        quantity: ci.quantity,
-        price: ci.price,
-        product: ci.product
-      }
-    })
-    receipt
-  end
-
-  # Validate product stock availability
-  def validate_and_update_cart(cart)
-    errors = []
-
-    cart.cart_items.all.each do |ci|
-      if ci.quantity > ci.product.inventory_count
-        message = ""
-        path = ["product", ci.product.title]
-
-        if ci.product.inventory_count == 0
+        if ci.product.inventory_count.zero?
           ci.destroy!
-          message = "#{ci.product.title} is no longer in stock. It has been removed from your cart."
+          errors.push(generate_out_of_stock_error(ci))
         else
           ci.update(quantity: ci.product.inventory_count)
-          message = "The quantity for #{ci.product.title} exceeds total inventory count. The quantity in your cart has been updated."
+          errors.push(generate_exceed_error(ci))
         end
-
-        errors.push(
-          {
-            message: message,
-            path: path
-          }
-        )
       end
+
+      errors
     end
 
-    errors
+    def generate_exceed_error(cart_item)
+      {
+        message: "The qty for #{cart_item.product.title} exceeds availability.
+                        The quantity in your cart has been updated.",
+        path: ['product', cart_item.product.title]
+      }
+    end
+
+    def generate_out_of_stock_error(cart_item)
+      {
+        message: "#{cart_item.product.title} is no longer in stock.
+                  It has been removed from your cart.",
+        path: ['product', cart_item.product.title]
+      }
+    end
   end
 end

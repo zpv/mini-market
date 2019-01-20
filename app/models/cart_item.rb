@@ -14,8 +14,8 @@ class CartItem < ApplicationRecord
     price * quantity
   end
 
-private
-  
+  private
+
   def update_prices
     self[:price] = price
     self[:total_price] = quantity * self[:price]

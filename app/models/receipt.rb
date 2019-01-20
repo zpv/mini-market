@@ -8,7 +8,7 @@ class Receipt < ApplicationRecord
     receipt_items.collect { |ri| ri.valid? ? ri.total_price : 0 }.sum
   end
 
-private
+  private
 
   def update_subtotal
     self[:subtotal] = subtotal

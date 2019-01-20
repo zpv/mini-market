@@ -7,7 +7,7 @@ module Types
 
     def products(only_available:)
       if only_available
-        Product.where("inventory_count > 0")
+        Product.where('inventory_count > 0')
       else
         Product.all
       end

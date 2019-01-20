@@ -1,0 +1,5 @@
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
+Lint/UnusedMethodArgument:
+  AllowUnusedKeywordArguments: true
