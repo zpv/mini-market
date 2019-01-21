@@ -23,7 +23,7 @@ module Types
       Product.find(id)
     end
 
-    field :cart, CartType, null: false do
+    field :cart, CartType, null: true do
       description 'View your current session\'s cart'
     end
 
