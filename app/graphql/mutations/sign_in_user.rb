@@ -1,7 +1,9 @@
 module Mutations
   class SignInUser < BaseMutation
-    argument :email, String, required: true
-    argument :password, String, required: true
+    description 'Sign into an existing account'
+
+    argument :email, String, required: true, description: 'Sign-in email'
+    argument :password, String, required: true, description: 'Sign-in password'
 
     field :token, String, null: false
     field :user, Types::UserType, null: false

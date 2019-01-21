@@ -1,7 +1,9 @@
 module Mutations
   class AddToCart < BaseMutation
-    argument :product_id, ID, required: true
-    argument :quantity, Integer, required: false, default_value: 1
+    description "Adds a specified number of items to the session's cart."
+
+    argument :product_id, ID, required: true, description: 'Product to be added'
+    argument :quantity, Integer, required: false, default_value: 1, description: 'Quantity to add'
 
     field :cart, Types::CartType, null: false
     field :user_errors, [Types::UserError], null: false

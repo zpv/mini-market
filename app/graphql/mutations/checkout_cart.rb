@@ -1,5 +1,8 @@
 module Mutations
   class CheckoutCart < AuthenticatedMutation
+    description "Checkout a cart and return its receipt.\n"\
+                'Requires the user to be authenticated.'
+
     field :receipt, Types::ReceiptType, null: true
     field :user_errors, [Types::UserError], null: false
 

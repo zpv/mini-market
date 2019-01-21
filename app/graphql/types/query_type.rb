@@ -2,7 +2,8 @@ module Types
   class QueryType < Types::BaseObject
     field :products, [ProductType], null: true do
       description 'Display a list of products'
-      argument :only_available, Boolean, required: false, default_value: false
+      argument :only_available, Boolean, required: false, default_value: false,
+                                         description: 'Show only products with available inventory'
     end
 
     def products(only_available:)
@@ -14,7 +15,8 @@ module Types
     end
 
     field :product, ProductType, null: false do
-      argument :id, Int, required: false
+      description 'View details for a specific product'
+      argument :id, Int, required: false, description: 'Product ID to be queried'
     end
 
     def product(id:)
