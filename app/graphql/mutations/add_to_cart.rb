@@ -12,6 +12,10 @@ module Mutations
       @cart = context[:current_cart]
 
       product = Product.find_by(id: product_id)
+
+      return product_not_found unless product
+      return invalid_quantity unless quantity > 0
+
       products_left = calc_available_qty(product)
 
       return insufficient_stock(product) if products_left < quantity
@@ -57,6 +61,26 @@ module Mutations
         user_errors: [{
           message: 'Unable to add to cart: Insufficient product stock.',
           path: ['product', product.title]
+        }]
+      }
+    end
+
+    def product_not_found
+      {
+        cart: @cart,
+        user_errors: [{
+          message: 'Given product was not found',
+          path: []
+        }]
+      }
+    end
+
+    def invalid_quantity
+      {
+        cart: @cart,
+        user_errors: [{
+          message: 'Quantity must be non-negative',
+          path: []
         }]
       }
     end
